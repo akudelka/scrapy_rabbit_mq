@@ -13,6 +13,11 @@ SPIDER_MODULES = ['examples.spiders']
 NEWSPIDER_MODULE = 'examples.spiders'
 
 
+RABBITMQ_SETTINGS = {
+    'user': 'abrarnitk',
+    'password': 'abrarnitk'
+}
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'examples (+http://www.yourdomain.com)'
 

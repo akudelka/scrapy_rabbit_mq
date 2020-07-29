@@ -22,7 +22,7 @@ def from_settings(settings, queue_name):
     credential_params = pika.PlainCredentials(user, password)
 
     connection_settings = copy.deepcopy(RABBITMQ_SETTINGS['connection'])
-    for (key, value) in queue_settings.get('connection', RABBITMQ_SETTINGS).items():
+    for (key, value) in queue_settings.get('connection', RABBITMQ_SETTINGS['connection']).items():
         connection_settings[key] = value
 
     connection = pika.BlockingConnection(
