@@ -1,5 +1,3 @@
-from abc import ABC
-
 from scrapy import signals
 from scrapy.exceptions import DontCloseSpider
 from scrapy.spiders import Spider, CrawlSpider
