@@ -11,6 +11,9 @@ class RabbitMQUtilSpider(object):
     def __init__(self):
         self.server = None
 
+    def start_requests(self):
+        yield self.next_request()
+
     def setup_queue(self, crawler=None):
         print('setting up with the queue')
 
@@ -24,7 +27,7 @@ class RabbitMQUtilSpider(object):
             self.rabbitmq_key = '{}:start_urls'.format(self.name)
 
         settings = crawler.settings
-        self.server = connection.from_settings(settings=settings)
+        self.server = connection.from_settings(settings=settings, queue_name=self.rabbitmq_key)
         self.crawler.signals.connect(self.spider_idle, signal=signals.spider_idle)
 
     def next_request(self):
