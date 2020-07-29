@@ -10,6 +10,7 @@ class RabbitMQUtilSpider(object):
 
     def __init__(self):
         self.server = None
+        self.connection = None
 
     def start_requests(self):
         return self.next_request()
@@ -26,8 +27,9 @@ class RabbitMQUtilSpider(object):
             self.rabbitmq_key = '{}:start_urls'.format(self.name)
 
         settings = crawler.settings
-        self.server = connection.from_settings(settings=settings, queue_name=self.rabbitmq_key)
+        self.server, self.connection = connection.from_settings(settings=settings, queue_name=self.rabbitmq_key)
         self.crawler.signals.connect(self.spider_idle, signal=signals.spider_idle)
+        self.crawler.signals.connect(self.item_scraped, signal=signals.item_scraped)
 
     def next_request(self):
         self.logger.info('reading url from queue')
@@ -44,10 +46,29 @@ class RabbitMQUtilSpider(object):
             self.crawler.engine.crawl(req, spider=self)
 
     def spider_idle(self):
-        self.logger.info('spider_idle')
+        """
+        Schedules a requests if available, otherwise waits, If there is no request available in the queue
+        so it will not close the spider
+        :return:
+        """
         self.schedule_next_request()
-        self.logger.info('spider_idle_called_next_request')
         raise DontCloseSpider
+
+    def item_scraped(self, *args, **kwargs):
+        """ After item has been scrapped, avoid waiting for scheduler to schedule next request
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        self.schedule_next_request()
+
+    def closed(self, reason):
+        if self.server:
+            self.server.close()
+
+        if self.connection:
+            self.connection.close()
+        self.logger.info('Closing spider name: %s, reason: %s', getattr(self, 'name', None), reason)
 
 
 class RabbitMqSpider(RabbitMQUtilSpider, Spider):

@@ -33,4 +33,4 @@ def from_settings(settings, queue_name):
 
     if queue_settings.get('prefetch_count'):
         channel.basic_qos(prefetch_count=queue_settings.get('prefetch_count'))
-    return channel
+    return channel, connection
