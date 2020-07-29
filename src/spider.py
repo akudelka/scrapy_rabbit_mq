@@ -15,8 +15,7 @@ class RabbitMQUtilSpider(object):
         return self.next_request()
 
     def setup_queue(self, crawler=None):
-        print('setting up with the queue')
-
+        self.logger.info('setting up with the queue')
         if self.server is not None:
             return
 
@@ -31,24 +30,23 @@ class RabbitMQUtilSpider(object):
         self.crawler.signals.connect(self.spider_idle, signal=signals.spider_idle)
 
     def next_request(self):
-        print('reading url from queue')
+        self.logger.info('reading url from queue')
         method_frame, header_frame, url = self.server.basic_get(queue=self.rabbitmq_key)
 
         if url:
-            print('URL', url)
             url = str(url, 'utf-8')
             yield self.make_requests_from_url(url)
             self.server.basic_ack(method_frame.delivery_tag)
-            print('Request completed')
+            self.logger.debug('Request completed')
 
     def schedule_next_request(self):
         for req in self.next_request():
             self.crawler.engine.crawl(req, spider=self)
 
     def spider_idle(self):
-        print('spider_idle')
+        self.logger.info('spider_idle')
         self.schedule_next_request()
-        print('spider_idle_called_next_request')
+        self.logger.info('spider_idle_called_next_request')
         raise DontCloseSpider
 
 
