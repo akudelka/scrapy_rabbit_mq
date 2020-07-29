@@ -32,14 +32,12 @@ class RabbitMQUtilSpider(object):
         self.crawler.signals.connect(self.item_scraped, signal=signals.item_scraped)
 
     def next_request(self):
-        self.logger.info('reading url from queue')
         method_frame, header_frame, url = self.server.basic_get(queue=self.rabbitmq_key)
 
         if url:
             url = str(url, 'utf-8')
             yield self.make_requests_from_url(url)
             self.server.basic_ack(method_frame.delivery_tag)
-            self.logger.debug('Request completed')
 
     def schedule_next_request(self):
         for req in self.next_request():
