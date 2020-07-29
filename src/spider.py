@@ -12,7 +12,7 @@ class RabbitMQUtilSpider(object):
         self.server = None
 
     def start_requests(self):
-        yield self.next_request()
+        return self.next_request()
 
     def setup_queue(self, crawler=None):
         print('setting up with the queue')
@@ -33,14 +33,16 @@ class RabbitMQUtilSpider(object):
     def next_request(self):
         print('reading url from queue')
         method_frame, header_frame, url = self.server.basic_get(queue=self.rabbitmq_key)
-        print(url)
+
         if url:
+            print('URL', url)
             url = str(url, 'utf-8')
-            return self.make_requests_from_url(url)
+            yield self.make_requests_from_url(url)
+            self.server.basic_ack(method_frame.delivery_tag)
+            print('Request completed')
 
     def schedule_next_request(self):
-        req = self.next_request()
-        if req:
+        for req in self.next_request():
             self.crawler.engine.crawl(req, spider=self)
 
     def spider_idle(self):
