@@ -27,6 +27,8 @@ class RabbitMQUtilSpider(object):
         settings = crawler.settings
         self.server, self.connection = connection.from_settings(settings=settings, queue_name=self.rabbitmq_key)
         self.crawler.signals.connect(self.spider_idle, signal=signals.spider_idle)
+
+        # This will be called just after item has been scraped, reason is to call this not to stop crawler
         self.crawler.signals.connect(self.item_scraped, signal=signals.item_scraped)
 
     def next_request(self):
