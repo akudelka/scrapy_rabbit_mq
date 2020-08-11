@@ -1,7 +1,5 @@
 import sys
 import os
-import io
-import scrapy_rabbit_mq
 
 try:
     from setuptools import setup
@@ -21,15 +19,10 @@ packages = [
     'scrapy_rabbit_mq'
 ]
 
-
-def read_file(filename):
-    with io.open(filename) as fp:
-        return fp.read().strip()
-
-
-def read_requirements(filename):
-    return [line.strip() for line in read_file(filename).splitlines()
-            if not line.startswith('#')]
+requirements = [
+    "Scrapy==2.2.0",
+    "pika==1.1.0"
+]
 
 
 setup(
@@ -40,7 +33,7 @@ setup(
     author_email='abrar.nitk@gmail.com',
     license='MIT',
     url='https://github.com/JoeyRead/scrapy_rabbit_mq',
-    install_requires=read_requirements('requirements.txt'),
+    install_requires=requirements,
     keywords=['scrapy_rabbit_mq'],
     packages=packages,
     classifiers=[
