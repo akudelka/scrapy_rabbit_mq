@@ -1,2 +1,4 @@
 .idea/
 **/**/__pycache__/**/**
+/scrapy_rabbit_mq.egg-info/
+/dist/
