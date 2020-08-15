@@ -29,7 +29,7 @@ setup(
     name='scrapy_rabbit_mq',
     author='Abrar Khan',
     description='RabbitMQ Publisher for Scrapy and feed message from Rabbit MQ',
-    version='0.1.2',
+    version='0.1.3',
     author_email='abrar.nitk@gmail.com',
     license='MIT',
     url='https://github.com/JoeyRead/scrapy_rabbit_mq',
