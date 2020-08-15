@@ -1,7 +1,7 @@
 from scrapy import signals
 from scrapy.exceptions import DontCloseSpider
 from scrapy.spiders import Spider, CrawlSpider
-import connection
+from . import connection
 
 
 class RabbitMQUtilSpider(object):
