@@ -36,7 +36,7 @@ class RabbitMQUtilSpider(object):
 
         if url:
             url = str(url, 'utf-8')
-            yield self.make_requests_from_url(url)
+            yield self.make_requests_from_url(url.strip('"'))
             self.server.basic_ack(method_frame.delivery_tag)
 
     def schedule_next_request(self):
