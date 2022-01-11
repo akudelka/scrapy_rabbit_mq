@@ -20,8 +20,8 @@ packages = [
 ]
 
 requirements = [
-    "Scrapy==2.2.0",
-    "pika==1.1.0"
+    "Scrapy>=2.2.0",
+    "pika>=1.1.0"
 ]
 
 
